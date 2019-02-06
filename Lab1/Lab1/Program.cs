@@ -13,6 +13,7 @@ namespace task2
             int cnt = 0;
             int a = int.Parse(Console.ReadLine());
             int [] bk = new int[a];
+
             List<int> BB = new List<int>();
 
             for (int i = 0; i < a; i++) 
@@ -25,7 +26,7 @@ namespace task2
                 int c = 0;
                 if ((bk[i] != 1) && (bk[i] != 0)) 
                 {
-                    for (int j = 2; j < bk[i]; i++) 
+                    for (int j = 2; j < bk[i]; j++) 
                     {
                         if (bk[i]%j==0) 
                         {
