@@ -18,7 +18,7 @@ namespace task2
 
             for (int i = 0; i < a; i++) 
             {
-                bk[i] = int.Parse(Console.ReadLine());
+                bk [i] = int.Parse(Console.ReadLine());
             }
 
             for (int i = 0; i < a; i++) 
