@@ -4,32 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace task2
+namespace Task2
 {
+    class Student
+    {
+        public string name;
+        public string id;
+        public int yos;
+
+        public Student()
+        {
+            name = Console.ReadLine();
+            id = Console.ReadLine();
+            yos = Convert.ToInt16(Console.ReadLine());
+
+        }
+    }
     class Program
     {
         static void Main(string[] args)
         {
-            int cnt = 0;
-            int a = int.Parse(Console.ReadLine());
-            int bk[] = new int[a];
-            List<int> BB = new List<int>();
-
-            for (int i = 0; i < a; i++) ;
-            {
-                bk[]= int.Parse(Console.ReadLine());
-            }
-
-            for (int i = 0; i < a; i++) ;
-            {
-                int c = 0;
-                if ((bk[i] != 1) && (bk[i] != 0)) ;
-                {
-                    for (int j = 2; j < bk[i]; i++) ;
-                    {
-                    }
-                }
-            }
+            Student s = new Student();
+            Console.WriteLine(s);
         }
     }
+
 }
