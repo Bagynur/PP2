@@ -5,3 +5,10 @@ C:\Users\kabyk\Desktop\PP2_2019\Lab1\Lab1\obj\Debug\task1.csprojAssemblyReferenc
 C:\Users\kabyk\Desktop\PP2_2019\Lab1\Lab1\obj\Debug\task1.csproj.CoreCompileInputs.cache
 C:\Users\kabyk\Desktop\PP2_2019\Lab1\Lab1\obj\Debug\Lab1.exe
 C:\Users\kabyk\Desktop\PP2_2019\Lab1\Lab1\obj\Debug\Lab1.pdb
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\bin\Debug\Lab1.exe.config
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\bin\Debug\Lab1.exe
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\bin\Debug\Lab1.pdb
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\obj\Debug\task1.csprojAssemblyReference.cache
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\obj\Debug\task1.csproj.CoreCompileInputs.cache
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\obj\Debug\Lab1.exe
+C:\Users\kabyk\Desktop\PP2_2019\Lab1\task1\obj\Debug\Lab1.pdb

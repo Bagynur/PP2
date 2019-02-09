@@ -10,41 +10,46 @@ namespace task2
     {
         static void Main(string[] args)
         {
+            int c = 0;
             int cnt = 0;
-            int a = int.Parse(Console.ReadLine());
-            int [] bk = new int[a];
+            int n = int.Parse(Console.ReadLine());
+            int[] a = new int[n];
+            int[] b = new int[n];
+            string s = Console.ReadLine();
+            string[] ss = s.Split();
 
-            List<int> BB = new List<int>();
-
-            for (int i = 0; i < a; i++) 
+            for (int i = 0; i < n; i++) 
             {
-                bk [i] = int.Parse(Console.ReadLine());
-            }
-
-            for (int i = 0; i < a; i++) 
-            {
-                int c = 0;
-                if ((bk[i] != 1) && (bk[i] != 0)) 
+                a[i] = int.Parse(ss[i]);
+                if (a[i] == 1)
                 {
-                    for (int j = 2; j < bk[i]; j++) 
+                    c++;
+                }
+                for (int j = 2; j <= a[i] / 2; j++) 
+                {
+                    if (a[i] % j == 0)
                     {
-                        if (bk[i]%j==0) 
-                        {
-                            c++;
-                        }
+                        c++;
                     }
-                    if (c == 0) 
+                }
+                if (c == 0)
+                {
+                    b[cnt] = a[i];
                     cnt++;
-                    BB.Add(bk[i]);
+                }
+                else
+                {
+                    c = 0;
                 }
             }
             Console.WriteLine(cnt);
-            for (int i = 0; i < BB.Count(); i++)
+            for (int i=0;i<cnt;i++)
             {
-                Console.Write(BB[i] + " ");
+                Console.Write(b[i] + " ");
             }
-
+            Console.ReadKey();
         }
+            
 
     }
 }
