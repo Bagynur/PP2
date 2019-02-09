@@ -18,6 +18,7 @@ namespace Task4
                     Console.Write("[*]");
                 }
                 Console.WriteLine();
+                Console.ReadKey();
             }
         }
     }
