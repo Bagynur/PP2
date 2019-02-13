@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace task2
+namespace Task_2
 {
     class Program
     {
@@ -15,7 +15,6 @@ namespace task2
             string[] ss = s.Split();
             int[] a = new int[ss.Length];
             string k = null;
-
             for (int i = 0; i < ss.Length; i++)
             {
                 a[i] = int.Parse(ss[i]);
@@ -26,9 +25,9 @@ namespace task2
                 for (int j = 2; j <= a[i] / 2; j++)
                 {
                     if (a[i] % j == 0)
-
                     {
                         cnt++;
+                        break;
                     }
                 }
                 if (cnt == 0)
@@ -40,9 +39,7 @@ namespace task2
                     cnt = 0;
                 }
             }
-
-            System.IO.File.WriteAllLines(@"C:\Users\kabyk\Desktop\PP2_2019\Lab2\task2\output.txt", k);
-
+            System.IO.File.WriteAllText(@"C:\Users\kabyk\Desktop\PP2_2019\Lab2\task2\output.txt", k);
         }
     }
 }
