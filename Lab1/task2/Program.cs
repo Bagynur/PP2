@@ -8,38 +8,38 @@ namespace task2
 {
     class Student
     {
-        public string name; 
-        public string id; 
-        public int yearOfStudy; 
+        public string name; // global name
+        public string id; // global id 
+        public int yearOfStudy; // global year
 
         public Student(string name, string id, int yearOfStudy)
         {
-            this.name = name; 
-            this.id = id; 
-            this.yearOfStudy = yearOfStudy; 
+            this.name = name; // we need to read our name as global
+            this.id = id; // we need to read our id as global
+            this.yearOfStudy = yearOfStudy; // we need to read our year as global
         }
 
-        public Student() 
+        public Student() //inputing the data about student
         {
-            name = Console.ReadLine();
-            id = Console.ReadLine(); 
-            yearOfStudy = Convert.ToInt32(Console.ReadLine()); 
+            name = Console.ReadLine(); // read the input 
+            id = Console.ReadLine(); // read the input
+            yearOfStudy = Convert.ToInt32(Console.ReadLine()); // read the input and make integer
         }
 
-        public void PrintInfo()
+        public void PrintInfo() // output the data about student with increment yearofstudy
         {
-            Console.WriteLine(name); 
-            Console.WriteLine(id); 
-            Console.WriteLine(yearOfStudy+1);
+            Console.WriteLine(name); // print name
+            Console.WriteLine(id); // print id
+            Console.WriteLine(yearOfStudy+1); // print year
         }
     }
     class Program
     {
         static void Main(string[] args)
         {
-            Student s = new Student();
-            s.PrintInfo();
-            Console.ReadKey(); 
+            Student s = new Student(); // give student to s
+            s.PrintInfo(); // call function
+            Console.ReadKey(); // for not to close function
         }
     }
 }
