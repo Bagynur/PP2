@@ -10,12 +10,12 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-            int n = Convert.ToInt32(Console.ReadLine());
-            for (int i = 1; i <= n; i++)
+            int n = Convert.ToInt32(Console.ReadLine()); // create int which will be length of an array
+            for (int i = 1; i <= n; i++) // run through n
             {
-                for (int j = 1; j <= i; j++)
+                for (int j = 1; j <= i; j++) // run through columns
                 {
-                    Console.Write("[*]");
+                    Console.Write("[*]"); // print out symbols
                 }
                 Console.WriteLine();
                 Console.ReadKey();
