@@ -4,20 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task2
+namespace task2
 {
     class Student
     {
-        public string name;
-        public string id;
-        public int yos;
+        public string name; 
+        public string id; 
+        public int yearOfStudy; 
 
-        public Student()
+        public Student(string name, string id, int yearOfStudy)
+        {
+            this.name = name; 
+            this.id = id; 
+            this.yearOfStudy = yearOfStudy; 
+        }
+
+        public Student() 
         {
             name = Console.ReadLine();
-            id = Console.ReadLine();
-            yos = Convert.ToInt16(Console.ReadLine());
+            id = Console.ReadLine(); 
+            yearOfStudy = Convert.ToInt32(Console.ReadLine()); 
+        }
 
+        public void PrintInfo()
+        {
+            Console.WriteLine(name); 
+            Console.WriteLine(id); 
+            Console.WriteLine(yearOfStudy+1);
         }
     }
     class Program
@@ -25,8 +38,8 @@ namespace Task2
         static void Main(string[] args)
         {
             Student s = new Student();
-            Console.WriteLine(s);
+            s.PrintInfo();
+            Console.ReadKey(); 
         }
     }
-
 }
