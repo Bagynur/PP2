@@ -1,156 +1,168 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
-namespace Task1
+namespace FarManager_lab3
 {
-    class FarManager
-    {
-        public int index = 0;
-        public string path;
-        public int size;
-        public bool ok;
-        DirectoryInfo directory = null;
-        FileSystemInfo currentfs = null;
-        public FarManager(string path)
-        {
-            this.path = path;
-            index = 0;
-            directory = new DirectoryInfo(path);
-            size = directory.GetFileSystemInfos().Length;
-            ok = true;
-        }
-        public void Color(FileSystemInfo fs, int pos)
-        {
-            if (index == pos)
-            {
-                Console.BackgroundColor = ConsoleColor.Blue;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                currentfs = fs;
-            }
-            else
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-        }
-        public void Show()
-        {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Clear();
-            directory = new DirectoryInfo(path);
-            FileSystemInfo[] fs = directory.GetFileSystemInfos();
-            DirectoryInfo[] di = directory.GetDirectories();
-            FileInfo[] fi = directory.GetFiles();
-            for (int i = 0; i < di.Length; i++)
-            {
-                fs[i] = di[i];
-            }
-            for (int i = 0; i < fi.Length; i++)
-            {
-                fs[i + di.Length] = fi[i];
-            }
-            for (int i = 0, k = 0; i < fs.Length; i++)
-            {
-                if (ok == false && fs[i].Name[0] == '.')
-                {
-                    continue;
-                }
-                Color(fs[i], k);
-                Console.WriteLine(fs[i].Name);
-                k++;
-            }
-        }
-        public void Start()
-        {
-            bool kk = false;
-            while (!kk)
-            {
-                Show();
-                ConsoleKeyInfo pressedkey = Console.ReadKey();
-                switch (pressedkey.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        index--;
-                        if (index < 0)
-                            index = size - 1;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        index++;
-                        if (index == size)
-                            index = 0;
-                        break;
-                    case ConsoleKey.Enter:
-                        if (currentfs.GetType() == typeof(DirectoryInfo))
-                        {
-                            index = 0;
-                            path = currentfs.FullName;
-                        }
-                        else
-                        {
-                            Console.BackgroundColor = ConsoleColor.White;
-                            Console.ForegroundColor = ConsoleColor.Black;
-                            Console.Clear();
-                            string path12 = currentfs.FullName;
-                            string s1 = File.ReadAllText(path12);
-                            Console.Write(s1);
-                            Console.ReadKey();
-                        }
-                        break;
-                    case ConsoleKey.Backspace:
-                        index = 0;
-                        path = directory.Parent.FullName;
-                        break;
-                    case ConsoleKey.Delete:
-                        if (currentfs.GetType() == typeof(DirectoryInfo))
-                        {
-                            string path12 = currentfs.FullName;
-                            Directory.Delete(path12, true);
-                        }
-                        else
-                        {
-                            string pathFile = currentfs.FullName;
-                            File.Delete(pathFile);
-                        }
-                        break;
-                    case ConsoleKey.F4:
-                        string path1 = directory.FullName;
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.Clear();
-                        Console.WriteLine("Create new name");
-                        string name = Console.ReadLine();
-                        if (currentfs.GetType() == typeof(FileInfo))
-                        {
-                            string sourcefile = currentfs.FullName;
-                            string destfile = path1 + @"\" + name;
-                            File.Move(sourcefile, destfile);
-                        }
-                        else
-                        if (currentfs.GetType() == typeof(DirectoryInfo))
-                        {
-                            string sourcedir = currentfs.FullName;
-                            string destdir = Path.Combine(path1, name);
-                            Directory.Move(sourcedir, destdir);
-                        }
-                        break;
-                    case ConsoleKey.Escape:
-                        ok = true;
-                        break;
-                }
-            }
-        }
-    }
     class Program
     {
+        static string path = @"C:\Users\kabyk\Desktop\PP2_2019\Lab3\Task"; //используемый путь
+        static FileSystemInfo currentFSI; //текущий элемент 
+        static int selectedindex = 0;
+        static Stack<string> hist = new Stack<string>(); //стэк для хранения того или иного пути
+
+
+        static void Show()
+        {
+            Console.SetCursorPosition(0, 0); //каждый раз позиция курсора 0,0 при запуске функции Show
+            DirectoryInfo d = new DirectoryInfo(@path); //все папки берутся с указанного пути
+
+            List<FileSystemInfo> li = new List<FileSystemInfo>(); //List используется для вывода сначала папок, затем файлов
+            li.AddRange(d.GetDirectories());
+            li.AddRange(d.GetFiles());
+            FileSystemInfo[] fsi = li.ToArray();
+
+            currentFSI = fsi[selectedindex];
+
+            for (int i = 0; i < fsi.Length; i++)
+            {
+                FileSystemInfo fs = fsi[i];
+                if (selectedindex == i) //выбранный элемент закрашен в красный цвет
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                }
+                else //фон остальных элементов черный
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+
+                if (fs.GetType() == typeof(DirectoryInfo)) //если тип объекта папка, цвет текста меняется на белый цвет
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+
+                else //если тип объекта файл, цвет текста меняется на желтый
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+
+                Console.WriteLine(i + 1 + ". " + fs.Name); //консоль выводит нумерацию и имя объекта
+            }
+        }
+
         static void Main(string[] args)
         {
-            string path = @"C:\Users\profa\Desktop\123";
-            FarManager farmanager = new FarManager(path);
-            farmanager.Start();
+
+            while (true) //цикл бесконечный
+            {
+                Show(); //запускается функция Show
+                ConsoleKeyInfo cki = Console.ReadKey(); //перменная для работы с клавишами
+                switch (cki.Key)
+                {
+                    case ConsoleKey.UpArrow: //при нажатия следующих клавиш, выполняются соответстующие функции
+                        UpArrow();
+                        break;
+                    case ConsoleKey.DownArrow:
+                        DownArrow();
+                        break;
+                    case ConsoleKey.Enter:
+                        OpenFile();
+                        break;
+                    case ConsoleKey.Escape:
+                        Escape();
+                        break;
+                    case ConsoleKey.Delete:
+                        Delete();
+                        break;
+                    case ConsoleKey.R:
+                        Rename();
+                        break;
+                }
+
+            }
         }
+
+        static void UpArrow() //функция для клавиши UpArrow
+        {
+            selectedindex--; //выбранный индекс уменьшается
+            if (selectedindex < 0)
+            {
+                selectedindex = 0;
+            }
+        }
+
+        static void DownArrow() //функция для клавиши DownArrow
+        {
+            selectedindex++; //выбранный индекс увеличивается
+        }
+
+        static void OpenFile() //функция для клавиши Enter
+        {
+            Console.Clear();
+            if (currentFSI.GetType() == typeof(DirectoryInfo)) //если текущий элемент, это папка
+            {
+                selectedindex = 0; //индекс приравнивается к нулю
+                hist.Push(path); //стэк заходит во внутрь папки
+                path = currentFSI.FullName; //пусть приравнивается новому пути 
+                Console.Clear();
+            }
+            else //если текущий элемент, это файл
+            {
+                FileStream fs = new FileStream(currentFSI.FullName, FileMode.Open, FileAccess.Read); //класс используемый для работы с файловыми данными (путь=выбранный файл)
+                StreamReader sr = new StreamReader(fs); //StreamReader считывает содержимое файла
+                Console.WriteLine(sr.ReadToEnd()); //консоль выводит все содержимое файла от начала до конца
+                Console.ReadKey();
+                sr.Close();
+                fs.Close();
+            }
+            Console.Clear();
+        }
+
+        static void Escape() //функция для клавиши Escape
+        {
+            path = hist.Peek(); //путь последней папки, show запустится из родительской папки
+            hist.Pop(); //удаляем
+            selectedindex = 0; //выбранный индекс приравнивается к нулю
+            Console.Clear();
+        }
+
+        static void Delete() //функция для клавиши Delete
+        {
+            if (currentFSI.GetType() == typeof(FileInfo)) //если выбранный объект файл, его путь полностью удаляется
+            {
+                File.Delete(currentFSI.FullName);
+            }
+            else //если выбранный объект папка, его путь полностью удаляется
+            {
+                Directory.Delete(currentFSI.FullName, true); //true-означает удаление не пустых папок тоже
+            }
+            Console.Clear();
+            selectedindex = 0;
+        }
+
+        static void Rename() //функция для клавиши Rename
+        {
+            Console.SetCursorPosition(10, 30); //снизу консоля выводится следующий текст
+            Console.Write("Enter new name:");
+            string path = currentFSI.FullName; //путь->путь выбранного объекта
+            string pr = new DirectoryInfo(path).Parent.FullName; //pr->переменная, которая берет путь до название объекта
+            string newName = Console.ReadLine();
+
+            if (currentFSI.GetType() == typeof(FileInfo)) //если выбранный объект файл, ему присваивается новое имя
+            {
+                File.Move(path, pr + "\\" + newName);
+            }
+            else //если выбранный объект папка, ему также присваивается новое заданное имя
+            {
+                Directory.Move(path, pr + "\\" + newName);
+            }
+
+            Console.Clear();
+
+        }
+
     }
 }
