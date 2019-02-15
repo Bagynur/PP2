@@ -1,127 +1,156 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
-namespace FarManager
+namespace Task1
 {
-    enum FSIMode
+    class FarManager
     {
-        DirectoryInfo = 1,
-        File = 2
-    }
-
-    class Layer
-    {
-        public FileSystemInfo[] Content
+        public int index = 0;
+        public string path;
+        public int size;
+        public bool ok;
+        DirectoryInfo directory = null;
+        FileSystemInfo currentfs = null;
+        public FarManager(string path)
         {
-            get;
-            set;
+            this.path = path;
+            index = 0;
+            directory = new DirectoryInfo(path);
+            size = directory.GetFileSystemInfos().Length;
+            ok = true;
         }
-        public int SelectedIndex
+        public void Color(FileSystemInfo fs, int pos)
         {
-            get;
-            set;
-        }
-        public void Draw()
-        {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
-            for (int i = 0; i < Content.Length; ++i)
+            if (index == pos)
             {
-                if (i == SelectedIndex)
-                {
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                }
-                else
-                {
-                    Console.BackgroundColor = ConsoleColor.Black;
-                }
-                Console.WriteLine(Content[i].Name);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                currentfs = fs;
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
-
+        public void Show()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Clear();
+            directory = new DirectoryInfo(path);
+            FileSystemInfo[] fs = directory.GetFileSystemInfos();
+            DirectoryInfo[] di = directory.GetDirectories();
+            FileInfo[] fi = directory.GetFiles();
+            for (int i = 0; i < di.Length; i++)
+            {
+                fs[i] = di[i];
+            }
+            for (int i = 0; i < fi.Length; i++)
+            {
+                fs[i + di.Length] = fi[i];
+            }
+            for (int i = 0, k = 0; i < fs.Length; i++)
+            {
+                if (ok == false && fs[i].Name[0] == '.')
+                {
+                    continue;
+                }
+                Color(fs[i], k);
+                Console.WriteLine(fs[i].Name);
+                k++;
+            }
+        }
+        public void Start()
+        {
+            bool kk = false;
+            while (!kk)
+            {
+                Show();
+                ConsoleKeyInfo pressedkey = Console.ReadKey();
+                switch (pressedkey.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        index--;
+                        if (index < 0)
+                            index = size - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        index++;
+                        if (index == size)
+                            index = 0;
+                        break;
+                    case ConsoleKey.Enter:
+                        if (currentfs.GetType() == typeof(DirectoryInfo))
+                        {
+                            index = 0;
+                            path = currentfs.FullName;
+                        }
+                        else
+                        {
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.Clear();
+                            string path12 = currentfs.FullName;
+                            string s1 = File.ReadAllText(path12);
+                            Console.Write(s1);
+                            Console.ReadKey();
+                        }
+                        break;
+                    case ConsoleKey.Backspace:
+                        index = 0;
+                        path = directory.Parent.FullName;
+                        break;
+                    case ConsoleKey.Delete:
+                        if (currentfs.GetType() == typeof(DirectoryInfo))
+                        {
+                            string path12 = currentfs.FullName;
+                            Directory.Delete(path12, true);
+                        }
+                        else
+                        {
+                            string pathFile = currentfs.FullName;
+                            File.Delete(pathFile);
+                        }
+                        break;
+                    case ConsoleKey.F4:
+                        string path1 = directory.FullName;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Clear();
+                        Console.WriteLine("Create new name");
+                        string name = Console.ReadLine();
+                        if (currentfs.GetType() == typeof(FileInfo))
+                        {
+                            string sourcefile = currentfs.FullName;
+                            string destfile = path1 + @"\" + name;
+                            File.Move(sourcefile, destfile);
+                        }
+                        else
+                        if (currentfs.GetType() == typeof(DirectoryInfo))
+                        {
+                            string sourcedir = currentfs.FullName;
+                            string destdir = Path.Combine(path1, name);
+                            Directory.Move(sourcedir, destdir);
+                        }
+                        break;
+                    case ConsoleKey.Escape:
+                        ok = true;
+                        break;
+                }
+            }
+        }
     }
     class Program
     {
         static void Main(string[] args)
         {
-            DirectoryInfo dir = new DirectoryInfo(@"C:\Program Files\7-Zip");
-            Layer l = new Layer
-            {
-                Content = dir.GetFileSystemInfos(),
-                SelectedIndex = 0
-            };
-
-
-            FSIMode curMode = FSIMode.DirectoryInfo;
-
-            Stack<Layer> history = new Stack<Layer>();
-            history.Push(l);
-
-            bool esc = false;
-            while (!esc)
-            {
-                if (curMode == FSIMode.DirectoryInfo)
-                {
-                    history.Peek().Draw();
-                }
-                ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-                switch (consoleKeyInfo.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        history.Peek().SelectedIndex--;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        history.Peek().SelectedIndex++;
-                        break;
-                    case ConsoleKey.Enter:
-                        int index = history.Peek().SelectedIndex;
-                        FileSystemInfo fsi = history.Peek().Content[index];
-                        if (fsi.GetType() == typeof(DirectoryInfo))
-                        {
-                            curMode = FSIMode.DirectoryInfo;
-                            // DirectoryInfo d = (DirectoryInfo)fsi;
-                            DirectoryInfo d = fsi as DirectoryInfo;
-                            history.Push(new Layer
-                            {
-                                Content = d.GetFileSystemInfos(),
-                                SelectedIndex = 0
-                            });
-                        }
-                        else
-                        {
-                            curMode = FSIMode.File;
-                            using (FileStream fs = new FileStream(fsi.FullName, FileMode.Open, FileAccess.Read))
-                            {
-                                using (StreamReader sr = new StreamReader(fs))
-                                {
-                                    Console.BackgroundColor = ConsoleColor.White;
-                                    Console.ForegroundColor = ConsoleColor.Black;
-                                    Console.Clear();
-                                    Console.WriteLine(sr.ReadToEnd());
-                                }
-                            }
-                        }
-                        break;
-                    case ConsoleKey.Backspace:
-                        if (curMode == FSIMode.DirectoryInfo)
-                        {
-                            history.Pop();
-                        }
-                        else
-                        {
-                            curMode = FSIMode.DirectoryInfo;
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                        break;
-                    case ConsoleKey.Escape:
-                        esc = true;
-                        break;
-                }
-            }
+            string path = @"C:\Users\profa\Desktop\123";
+            FarManager farmanager = new FarManager(path);
+            farmanager.Start();
         }
     }
 }
